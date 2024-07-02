@@ -1,66 +1,73 @@
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setToLocation } from "../../store/reducers/toLocationReducer";
 
-function Map() {
-  
-  const widget = useRef();
+const Map = () => {
+  const widgetRef = useRef(null);
+  const dispatch = useDispatch();
+  const deliveryMethod = useSelector((state) => state.deliveryMethod);
 
   useEffect(() => {
-    // 2. Помещаем конструктор в current. Настраиваем конфигурацию
-    widget.current = new window.CDEKWidget({
-      from: {
-        country_code: "RU",
-        city: "Новосибирск",
-        postal_code: 630009,
-        code: 270,
-        address: "ул. Большевистская, д. 101",
-      },
-      apiKey: "0877a725-bbfd-4321-8049-628abf59f875",
-      canChoose: true,
-      servicePath: "Твой servicePath",
-      hideFilters: {
-        have_cashless: false,
-        have_cash: false,
-        is_dressing_room: false,
-        type: false,
-      },
-      debug: true,
-      defaultLocation: "Москва, ш. Старомарьинское, 6, корп. 1",
-      lang: "rus",
-      currency: "RUB",
-      tariffs: {
-        office: [234, 136, 138],
-        door: [233, 137, 139],
-        pickup: [235, 138, 137],
-      },
-      hideDeliveryOptions: {
-        office: false,
-        door: true,
-      },
-      popup: true,
-      goods: [
-        {
-          width: 10,
-          height: 10,
-          length: 10,
-          weight: 10,
+    function startWidget() {
+      window.YaDelivery.createWidget({
+        containerId: "delivery-widget",
+        params: {
+          city: "Казань",
+          size: {
+            height: "800px",
+            width: "500px",
+          },
+          source_platform_station: "05e809bb-4521-42d9-a936-0fb0744c0fb3",
+          physical_dims_weight_gross: 10000,
+          delivery_price: "от 100",
+          delivery_term: "от 1 дня",
+          show_select_button: true,
+          filter: {
+            type: ["pickup_point", "terminal"],
+            is_yandex_branded: false,
+            payment_methods: ["already_paid", "card_on_receipt"],
+            payment_methods_filter: "or",
+          },
         },
-      ],
-      onReady() {
-        console.log("Widget is ready");
-      },
-      onCalculate(rates, address) {
-        console.log(rates, address);
-      },
-      onChoose(delivery, rate, address) {
-        console.log(delivery, rate, address);
-      },
-    });
+      });
+    }
 
-    // 3. Открываем виджет после его создания
-    widget.current.open();
-  }, []);
+    if (typeof window.YaDelivery !== "undefined") {
+      startWidget();
+    } else {
+      document.addEventListener("YaNddWidgetLoad", startWidget);
+    }
 
-  return <div style={{ width: "100%", height: "100%" }} />;
-}
+    const handlePointSelected = (data) => {
+      const pointOfIssueData = {
+        address: data.detail.address.full_address,
+      };
+
+      dispatch(setToLocation(pointOfIssueData));
+    };
+
+    document.addEventListener("YaNddWidgetPointSelected", handlePointSelected);
+    widgetRef.current = document.getElementById('delivery-widget');
+
+    return () => {
+      document.removeEventListener("YaNddWidgetPointSelected", startWidget);
+    };
+  }, [dispatch]);
+
+  return (
+    <div
+      id="delivery-widget"
+      style={{
+        height: "800px",
+        width: "1100px",
+        boxShadow:
+          "0 30px 12px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1)",
+        pointerEvents: deliveryMethod === "Доставка" ? "none" : "auto",
+        opacity: deliveryMethod === "Доставка" ? 0.5 : 1,
+      }}
+      ref={widgetRef}
+    ></div>
+  );
+};
 
 export default Map;

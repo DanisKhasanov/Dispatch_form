@@ -2,44 +2,124 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px;
+  padding: 30px;
 }
 
 .filling-card {
   flex: 1;
-  max-width: 600px;
-  height: 560px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  height: 770px;
   margin-right: 20px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 40px;
-  background-color: #fff;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.component-Map {
-  flex: 1;
-  height: 600px; /*возможно убрать*/
-  /* height: 100%;  */
-  background-color: #f0f0f0; 
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-shadow: 0 15px 16px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.filling-card input {
+  height: 25px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 5px;
+  padding-left: 15px;
+  margin-right: 10px;
+  background-color: #f5f5f5;
+}
 
-.button-submit {
-  margin-top: 20px;
+.filling-card h2 {
+  margin: 10px 0 5px 0;
+  font-size: 20px;
+}
+
+.packages-table table {
+  width: 100%;
+  max-height: 350px;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.packages-table th,
+.packages-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.packages-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.recipient-inputs {
+  display: flex;
+}
+
+.delivery-options {
+  display: flex;
+  gap: 20px;
+}
+
+.delivery-option {
+  display: flex;
+  padding-left: 5px;
+  align-items: center;
+}
+
+.delivery-option input {
+  margin-right: 8px;
+}
+
+.button-submit,
+.button-submit-disabled,
+.button-submit-success {
+  margin-top: 15px;
   padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+  width: 100%;
+  height: 50px;
+  color: var(--color-text-main);
   border: none;
-  border-radius: 5px;
+  border-radius: 16px;
+  font-weight: 500;
   font-size: 16px;
   cursor: pointer;
+  text-align: center;
 }
 
-.button-submit:hover {
-  background-color: #45a049;
+.button-submit {
+  background-color: var(--color-yellow);
+}
+
+.button-submit-disabled {
+  background-color: var(--color-yellow);
+  filter: brightness(70%);
+  cursor: not-allowed;
+}
+
+.button-submit-success {
+  background-color: green;
+  cursor: not-allowed;
+}
+
+.error {
+  color: rgb(177, 64, 20);
+  font-size: 12px;
+  margin-top: 2px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  height: 16px;
+}
+
+.error:empty::before {
+  content: attr(data-placeholder);
+  visibility: hidden;
+}
+.error-message {
+  color: rgb(177, 64, 20);
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
 }

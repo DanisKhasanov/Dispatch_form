@@ -1,40 +1,53 @@
+import PropTypes from "prop-types";
+import { validateRecipient } from "../Validate/validate";
+
 const Recipient = ({ recipient, setRecipient }) => {
-  const handleNameChange = (e) => {
-    setRecipient({ ...recipient, name: e.target.value });
+  const handleRecipient = (e) => {
+    const { name, value } = e.target;
+    setRecipient({ ...recipient, [name]: value });
   };
 
-  const handlePhoneChange = (index, value) => {
-    const phones = recipient.phones.map((phone, i) =>
-      i === index ? { ...phone, number: value } : phone
-    );
-    setRecipient({ ...recipient, phones });
-  };
-
-  const addPhone = () => {
-    setRecipient({
-      ...recipient,
-      phones: [...recipient.phones, { number: "" }],
-    });
-  };
+  const errors = validateRecipient(recipient);
 
   return (
-    <div>
+    <div className="recipient-container">
       <h2>Получатель:</h2>
-      <label >ФИО: </label>
-      <input type="text" value={recipient.name} onChange={handleNameChange} />
-
-      <label style={{marginLeft: "50px"}}> Телефон: </label>
-      {recipient.phones.map((phone, index) => (
-        <input
-          key={index}
-          type="text"
-          value={phone.number}
-          onChange={(e) => handlePhoneChange(index, e.target.value)}
-        />
-      ))}
-      {/* <button style = {{marginLeft: "10px"}}onClick={addPhone}>Добавить телефон</button> */}
+      <div className="recipient-inputs">
+        <div className="input-group">
+          <input
+            type="text"
+            name="name"
+            value={recipient.name}
+            onChange={handleRecipient}
+            placeholder="ФИО"
+          />
+          <p className="error" data-placeholder=" ">
+            {errors.name}
+          </p>
+        </div>
+        <div className="input-group">
+          <input
+            type="text"
+            name="phones"
+            value={recipient.phones}
+            onChange={handleRecipient}
+            placeholder="Телефон"
+          />
+          <p className="error" data-placeholder=" ">
+            {errors.phones}
+          </p>
+        </div>
+      </div>
     </div>
   );
+};
+
+Recipient.propTypes = {
+  recipient: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    phones: PropTypes.string.isRequired,
+  }).isRequired,
+  setRecipient: PropTypes.func.isRequired,
 };
 
 export default Recipient;
